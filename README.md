@@ -88,6 +88,11 @@ The **ModalityUntiedFeedForward** class enhances the feed-forward network by cre
 2. **Dynamic Routing**: Tokens are dynamically routed to the appropriate expert using a `modality_mask`.
 3. **Normalization Per Modality**: Each modality expert applies its own normalization layer to ensure tailored processing.
 
+
+
+Once you get this, congrats! you have done more than half (67%) of the job! Because MLP typically takes 67% of the non-embedding parameter.
+
+
 #### **Code**
 
 ```python
@@ -159,6 +164,8 @@ The **ModalityUntiedAttention** class extends the standard transformer attention
 
 ### **Implementation**
 
+(just for illustration purpose for clarity, see `src/(ref)simplified_ModalityUntiedAttention.py` for full code)
+
 ```python
 class ModalityUntiedAttention(torch.nn.Module):
     """
@@ -174,6 +181,7 @@ class ModalityUntiedAttention(torch.nn.Module):
         n_heads: int,
         n_kv_heads: int,
         dropout: float,
+        efficient_attn: Optional[str],
         use_rope: bool,
         init_args: InitArgs,
         init_depth: Optional[int],
@@ -272,8 +280,8 @@ class ModalityUntiedAttention(torch.nn.Module):
 
             # Apply QK normalization if enabled
             if hasattr(self, "local_experts_q_normalization"):
-                xq = self.local_experts_q_normalization[i](xq)
-                xk = self.local_experts_k_normalization[i](xk)
+                xq = self.local_experts_q_normalization[i](xq) # see full code
+                xk = self.local_experts_k_normalization[i](xk) # see full code
 
             expert_outputs_xq.append(xq)
             expert_outputs_xk.append(xk)
