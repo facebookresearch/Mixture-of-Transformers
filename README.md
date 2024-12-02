@@ -123,8 +123,7 @@ class ModalityUntiedFeedForward(torch.nn.Module):
 ```
 
 #### **Example of `modality_mask`**
-If `modality_src_tokens` indicates the modality of each token, e.g., `[0, 1, 0, 2]` (text, image, text, speech):
-- `modality_mask` identifies which tokens belong to each modality:
+In the snippet above, we use `modality_mask`, a list of binary masks to identify which tokens belong to each modality.
   ```
   [[True, False, True, False],  # Text
    [False, True, False, False], # Image
