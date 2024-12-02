@@ -7,40 +7,29 @@
 > Paper: https://arxiv.org/abs/2411.04996
 
 
-## About
-How can we reduce pretraining costs for multi-modal models without sacrificing quality?
-
-In our new work, we study this question: [arXiv:2411.04996](https://arxiv.org/abs/2411.04996).
-
-At [@AIatMeta](https://twitter.com/AIatMeta), we introduce **Mixture-of-Transformers (MoT)**, a sparse architecture with **modality-aware sparsity** for every non-embedding transformer parameter (e.g., feed-forward networks, attention matrices, and layer normalization). MoT achieves dense-level performance with **up to 66% fewer FLOPs**!
-
-### Key Results
-
+## Key Results
+We introduce **Mixture-of-Transformers (MoT)**, a sparse architecture with **modality-aware sparsity** for every non-embedding transformer parameter (e.g., feed-forward networks, attention matrices, and layer normalization). 
 - ✅ **Chameleon setting (text + image generation):**
-  Our 7B MoT matches dense baseline quality using just **55.8% of the FLOPs**.
+  MoT (7B) matches dense baseline quality using just **55.8% of the FLOPs**.
 
-- ✅ **Speech as a third modality:**
-  MoT achieves dense-level speech quality with only **37.2% of the FLOPs**.
+- ✅ **Chameleon setting (text + image + speech generation):**
+  MoT (443M) achieves dense-level speech quality with only **37.2% of the FLOPs**.
 
-- ✅ **Transfusion setting (text autoregressive + image diffusion):**
-  MoT matches dense model quality using **one-third of the FLOPs**.
+- ✅ **Transfusion setting (text autoregressive + image diffusion generation):**
+  MoT (7B) matches dense model quality using **one-third of the FLOPs**.
 
 - ✅ **System profiling:**
-  MoT achieves:
+  MoT (Chameleon setting, 443M) achieves:
   - Dense-level image quality in **47%** of the wall-clock time.
   - Dense-level text quality in **75.6%** of the wall-clock time.
   **(Measured on AWS `p4de.24xlarge` instances with NVIDIA A100 GPUs.)**
 
-### Takeaway
-
-**Modality-aware sparsity in MoT offers a scalable path to efficient, multi-modal AI with reduced pretraining costs.**
+📝 Takeaways: **Modality-aware sparsity in MoT offers a scalable path to efficient, multi-modal AI with reduced pretraining costs.**
 
 
 ## Tutorial: Step-by-step implementation of MoT
 
-Enter the **Mixture-of-Transformers (MoT)**—a novel architecture that decouples every non-embedding parameter by modality, including feed-forward networks, attention, and normalization layers.
-
-Let's dive in!
+💬 Let's dive in!
 
 ---
 
@@ -81,16 +70,14 @@ class Transformer(torch.nn.Module):
 
 ### **Step 1: Modality-Specific Feed-Forward Networks**
 
-The **ModalityUntiedFeedForward** class enhances the feed-forward network by creating separate experts for each modality, enabling specialized processing for tasks involving multiple modalities, such as text, image, or speech.
+The `ModalityUntiedFeedForward` class enhances the feed-forward network by creating separate experts for each modality, enabling specialized processing for tasks involving multiple modalities, such as text, image, or speech.
 
 #### **Key Features**
-1. **Separate Experts**: Each modality has its own feed-forward expert, instantiated using the existing `FeedForward` class for modularity and simplicity.
-2. **Dynamic Routing**: Tokens are dynamically routed to the appropriate expert using a `modality_mask`.
-3. **Normalization Per Modality**: Each modality expert applies its own normalization layer to ensure tailored processing.
+1. **Decoupled Parameters**: Each modality has its own feed-forward expert, instantiated using the existing `FeedForward` class for modularity and simplicity.
+2. **Dynamic Routing**: Tokens are dynamically routed to modality-specific expert based on a `modality_mask`.
+3. **Modality-specific normalization**: Each modality expert applies its own normalization layer to ensure tailored processing.
 
-
-
-Once you get this, congrats! you have done more than half (67%) of the job! Because MLP typically takes 67% of the non-embedding parameter.
+💬 Once you get this, congrats! you have done more than half (67%) of the job! Because `Feedforward` typically takes 67% of the non-embedding parameter.
 
 
 #### **Code**
@@ -143,28 +130,26 @@ If `modality_src_tokens` indicates the modality of each token, e.g., `[0, 1, 0, 
    [False, True, False, False], # Image
    [False, False, False, True]] # Speech
   ```
-This mask routes tokens to the appropriate modality-specific expert.
+Tokens are routed to the appropriate modality-specific expert based on the modality mask.
 
 
 ---
 
 ### **Step 2: Modality-Specific Attention Class**
 
-The **ModalityUntiedAttention** class extends the standard transformer attention mechanism by introducing modality-specific parameters for queries (`wq`), keys (`wk`), values (`wv`), and output projections (`wo`). It also incorporates modality-specific normalization layers to ensure that the model can handle modality-specific representations more effectively.
+The `ModalityUntiedAttention` class extends the standard transformer attention mechanism by introducing modality-specific weight matrices for queries (`wq`), keys (`wk`), values (`wv`), and output projections (`wo`). It also incorporates modality-specific normalization layers to ensure that the model can handle modality-specific representations more effectively.
 
 ---
 
-### **Key Features**
+#### **Key Features**
 1. **Decoupled Parameters**: Separate parameters (`wq`, `wk`, `wv`, `wo`) for each modality to capture modality-specific relationships.
 2. **Modality-Specific Normalization**: Norm layers for each modality applied to intermediate results (`q`, `k`, `v`) and final attention outputs.
-3. **Dynamic Token Routing**: Tokens are dynamically routed to modality-specific experts using `modality_masks`.
-4. **Efficient Processing**: Sequential processing and merging ensure efficient and flexible computation.
-
+3. **Dynamic Routing**: Tokens are dynamically routed to modality-specific attention experts using `modality_masks`.
 ---
 
-### **Implementation**
+#### **Implementation**
 
-(just for illustration purpose for clarity, see `src/(ref)simplified_ModalityUntiedAttention.py` for full code)
+💬 The function below is for illustration purpose. See `src/(ref)simplified_ModalityUntiedAttention.py` for full implementation.
 
 ```python
 class ModalityUntiedAttention(torch.nn.Module):
@@ -322,7 +307,7 @@ class ModalityUntiedAttention(torch.nn.Module):
 
 ---
 
-### **How It Works**
+#### Code Flow
 1. **Initialization**:
    - Modality-specific projections (`wq`, `wk`, `wv`, `wo`) and norm layers are created for each modality.
 2. **Token Routing**:
@@ -335,9 +320,9 @@ class ModalityUntiedAttention(torch.nn.Module):
 
 ---
 
-## **Step 3: Handling Norms**
+### **Step 3: Handling Norms**
 
-**Good news**—if your `TransformerBlock` already handles normalization within the attention and feed-forward classes, you're all set:
+💬 **Good news**—if your `TransformerBlock` already handles normalization within the attention and feed-forward classes, you're all set:
 
 ```python
 class TransformerBlock(torch.nn.Module):
@@ -347,13 +332,13 @@ class TransformerBlock(torch.nn.Module):
         return out
 ```
 
-If not, move normalization into the respective attention and feed-forward classes, as shown in the implementations above.
+If not, we recommend moving normalization into the respective attention and feed-forward classes, as shown in the implementations above.
 
 ---
 
-## **Bringing It All Together**
+### **Bringing It All Together**
 
-By combining **ModalityUntiedFeedForward** and **ModalityUntiedAttention**, MoT introduces modality-specific specialization while preserving the transformer’s elegance. These modular extensions integrate seamlessly into existing transformer architectures, offering efficient and scalable solutions for multi-modal tasks.
+By combining **ModalityUntiedFeedForward** and **ModalityUntiedAttention**, MoT introduces modality-specific specialization where each modality adopts a completely separate set of transformer parameters. Interaction across modalities is enabled via global self-attention at each layer. These modular extensions integrate seamlessly into existing transformer architectures, offering efficient and scalable solutions for multi-modal tasks.
 
 ---
 
@@ -365,13 +350,13 @@ By combining **ModalityUntiedFeedForward** and **ModalityUntiedAttention**, MoT 
 
 ---
 
-Excited to try it out? With MoT, you’re not just building models—you’re pushing the boundaries of multi-modal AI! 🚀
+💬 Excited to try it out? With MoT, you’re not just building models—you’re pushing the boundaries of multi-modal AI! 🚀
 
 
 
 ## Citation
 
-If you use this codebase, or otherwise find our work valuable, please cite Mixture-of-Transformers (MoT):
+If you use this codebase, or otherwise find our work valuable, please cite:
 ```
 @article{mixture-of-transformers2024,
   title={Mixture-of-Transformers: A Sparse and Scalable Architecture for Multi-Modal Foundation Models},
