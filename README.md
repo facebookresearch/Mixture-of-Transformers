@@ -1,11 +1,11 @@
 # Mixture-of-Transformers (MoT)
 
-
-![MoT](assets/MoT-teaser.png "Mixture-of-Transformers")
-> **Mixture-of-Transformers: A Sparse and Scalable Architecture for Multi-Modal Foundation Models**\
+This is a playbook release of the following paper:
+> **Mixture-of-Transformers: A Sparse and Scalable Architecture for Multi-Modal Foundation Models**. TMLR (March 2025).\
 > Weixin Liang, Lili Yu, Liang Luo, Srinivasan Iyer, Ning Dong, Chunting Zhou, Gargi Ghosh, Mike Lewis, Wen-tau Yih, Luke Zettlemoyer, Xi Victoria Lin\
 > Paper: https://arxiv.org/abs/2411.04996
 
+![MoT](assets/MoT.png "Mixture-of-Transformers")
 
 ## Key Results
 We introduce **Mixture-of-Transformers (MoT)**, a sparse architecture with **modality-aware sparsity** for every non-embedding transformer parameter (e.g., feed-forward networks, attention matrices, and layer normalization). 
@@ -349,7 +349,7 @@ By combining **ModalityUntiedFeedForward** and **ModalityUntiedAttention**, MoT 
 
 ---
 
-💬 Excited to try it out? With MoT, you’re not just building models—you’re pushing the boundaries of multi-modal AI! 🚀
+💬 Excited to try it out? We're looking forward to hearing your experience applying MoT to your own multimodal LLM project! 🚀
 
 
 
