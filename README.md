@@ -144,6 +144,7 @@ The `ModalityUntiedAttention` class extends the standard transformer attention m
 1. **Decoupled Parameters**: Separate parameters (`wq`, `wk`, `wv`, `wo`) for each modality to capture modality-specific relationships.
 2. **Modality-Specific Normalization**: Norm layers for each modality applied to intermediate results (`q`, `k`, `v`) and final attention outputs.
 3. **Dynamic Routing**: Tokens are dynamically routed to modality-specific attention experts using `modality_masks`.
+4. **Global Attention**: Global attention is applied to all tokens in the sequence after the QKV projection.
 ---
 
 #### **Implementation**
