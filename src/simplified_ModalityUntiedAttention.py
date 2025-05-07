@@ -35,7 +35,7 @@ class ModalityUntiedAttention(torch.nn.Module):
             dim, n_kv_heads * head_dim, init_args
         )
         self.local_experts_wo = self._create_experts(
-            n_heads * head_dim, dim, init_args, row_parallel=True
+            n_heads * head_dim, dim, init_args
         )
 
         # QK normalization (if enabled)
@@ -63,19 +63,17 @@ class ModalityUntiedAttention(torch.nn.Module):
             use_rope=use_rope,
         )
 
-    def _create_experts(self, input_dim, output_dim, init_args, row_parallel=False):
+    def _create_experts(self, input_dim, output_dim, init_args):
         """
         Helper to create modality-specific linear projections.
         """
-        cls = RowParallelLinear if row_parallel else ColumnParallelLinear
         init_fn = get_init_fn(init_args, input_dim, None)
         return torch.nn.ModuleList(
             [
-                cls(
+                torch.nn.Linear(
                     input_dim,
                     output_dim,
                     bias=False,
-                    init_method=init_fn,
                     params_dtype=torch.get_default_dtype(),
                 )
                 for _ in range(self.n_modalities)
