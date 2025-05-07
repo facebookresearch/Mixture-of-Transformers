@@ -312,7 +312,7 @@ class ModalityUntiedAttention(torch.nn.Module):
 4. **Output Projection and Normalization**:
    - Attention outputs are projected back and normalized per modality.
      
-Please refer to `src/simplified_ModalityUntiedAttention.py` for a more comprehensive implementation.
+Please refer to [`src/Basic_ModalityUntiedAttention.py`](src/Basic_ModalityUntiedAttention.py) for a more comprehensive implementation.
 
 ---
 
