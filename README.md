@@ -77,7 +77,7 @@ The `ModalityUntiedFeedForward` class enhances the feed-forward network by creat
 2. **Dynamic Routing**: Tokens are dynamically routed to modality-specific expert based on a `modality_mask`.
 3. **Modality-specific normalization**: Each modality expert applies its own normalization layer to ensure tailored processing.
 
-💬 Once you get this, congrats! you have done more than half (67%) of the job! Because `Feedforward` typically takes 67% of the non-embedding parameter.
+💬 Congrats! you have done more than half (67%) of the job! Because `Feedforward` typically takes 67% of the non-embedding parameter.
 
 
 #### **Code**
