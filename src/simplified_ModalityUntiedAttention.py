@@ -1,3 +1,5 @@
+import torch
+
 class ModalityUntiedAttention(torch.nn.Module):
     """
     Modality-specific attention with decoupled query, key, value, and output projections,
@@ -80,19 +82,13 @@ class ModalityUntiedAttention(torch.nn.Module):
             ]
         )
 
-    def _create_norms(self, dim, n_modalities, norm_type="rmsnorm", eps=1e-5):
+    def _create_norms(self, dim, n_modalities, eps=1e-5):
         """
         Helper to create modality-specific normalization layers.
-        """
+        """     
         return torch.nn.ModuleList(
             [
-                build_norm_fn(
-                    norm_type,
-                    dim,
-                    eps,
-                    True,  # affine
-                )
-                for _ in range(n_modalities)
+                torch.nn.LayerNorm(dim, eps) for _ in range(n_modalities)
             ]
         )
 
