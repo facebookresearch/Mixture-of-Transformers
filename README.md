@@ -1,6 +1,6 @@
 # Mixture-of-Transformers (MoT)
 
-This playbook demonstrates a basic implementation of the MoT architecture as proposed in the following paper:
+This playbook demonstrates a basic implementation of MoT as proposed in:
 > **Mixture-of-Transformers: A Sparse and Scalable Architecture for Multi-Modal Foundation Models**. TMLR (March 2025).\
 > Weixin Liang, Lili Yu, Liang Luo, Srinivasan Iyer, Ning Dong, Chunting Zhou, Gargi Ghosh, Mike Lewis, Wen-tau Yih, Luke Zettlemoyer, Xi Victoria Lin\
 > Paper: https://arxiv.org/abs/2411.04996
