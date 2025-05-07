@@ -1,6 +1,6 @@
 # Mixture-of-Transformers (MoT)
 
-This is a playbook release of the following paper:
+This is a playbook of the following paper:
 > **Mixture-of-Transformers: A Sparse and Scalable Architecture for Multi-Modal Foundation Models**. TMLR (March 2025).\
 > Weixin Liang, Lili Yu, Liang Luo, Srinivasan Iyer, Ning Dong, Chunting Zhou, Gargi Ghosh, Mike Lewis, Wen-tau Yih, Luke Zettlemoyer, Xi Victoria Lin\
 > Paper: https://arxiv.org/abs/2411.04996
@@ -147,7 +147,7 @@ The `ModalityUntiedAttention` class extends the standard transformer attention m
 4. **Global Attention**: Global attention is applied to all tokens in the sequence after the QKV projection.
 ---
 
-#### **Implementation**
+#### **Pseudo Code**
 ```python
 class ModalityUntiedAttention(torch.nn.Module):
     """
@@ -301,11 +301,8 @@ class ModalityUntiedAttention(torch.nn.Module):
             expert_outputs.append(expert_output)
         return self._merge_modalities(output.size(0), expert_outputs, modality_masks)
 ```
-💬 Please refer to `src/simplified_ModalityUntiedAttention.py` for a more comprehensive implementation.
+💬 The code flow is:
 
----
-
-#### Code Flow
 1. **Initialization**:
    - Modality-specific projections (`wq`, `wk`, `wv`, `wo`) and norm layers are created for each modality.
 2. **Token Routing**:
@@ -314,7 +311,8 @@ class ModalityUntiedAttention(torch.nn.Module):
    - Modality-specific queries, keys, and values are processed and merged for the inner attention mechanism.
 4. **Output Projection and Normalization**:
    - Attention outputs are projected back and normalized per modality.
-
+     
+Please refer to `src/simplified_ModalityUntiedAttention.py` for a more comprehensive implementation.
 
 ---
 
