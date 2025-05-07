@@ -148,9 +148,6 @@ The `ModalityUntiedAttention` class extends the standard transformer attention m
 ---
 
 #### **Implementation**
-
-💬 The function below is for illustration purpose. See `src/(ref)simplified_ModalityUntiedAttention.py` for full implementation.
-
 ```python
 class ModalityUntiedAttention(torch.nn.Module):
     """
@@ -304,7 +301,7 @@ class ModalityUntiedAttention(torch.nn.Module):
             expert_outputs.append(expert_output)
         return self._merge_modalities(output.size(0), expert_outputs, modality_masks)
 ```
-
+💬  Please refer to `src/simplified_ModalityUntiedAttention.py` for a more comprehensive implementation.
 ---
 
 #### Code Flow
