@@ -16,7 +16,6 @@ class ModalityUntiedAttention(torch.nn.Module):
 
     def __init__(
         self,
-        args: ModelArgs,
         dim: int,
         head_dim: int,
         n_heads: int,
@@ -24,27 +23,21 @@ class ModalityUntiedAttention(torch.nn.Module):
         dropout: float,
         efficient_attn: Optional[str],
         use_rope: bool,
-        init_args: InitArgs,
         init_depth: Optional[int],
         norm_type: str,
         norm_eps: float = 1e-5,
         qk_normalization: bool = False,
+        n_modalities: int = 2,
     ):
         super().__init__()
 
-        self.n_modalities = args.n_modalities
+        self.n_modalities = n_modalities
 
         # Initialize modality-specific query, key, value, and output projections
-        self.local_experts_wq = self._create_experts(dim, n_heads * head_dim, init_args)
-        self.local_experts_wk = self._create_experts(
-            dim, n_kv_heads * head_dim, init_args
-        )
-        self.local_experts_wv = self._create_experts(
-            dim, n_kv_heads * head_dim, init_args
-        )
-        self.local_experts_wo = self._create_experts(
-            n_heads * head_dim, dim, init_args
-        )
+        self.local_experts_wq = self._create_experts(dim, n_heads * head_dim)
+        self.local_experts_wk = self._create_experts(dim, n_kv_heads * head_dim)
+        self.local_experts_wv = self._create_experts(dim, n_kv_heads * head_dim)
+        self.local_experts_wo = self._create_experts(n_heads * head_dim, dim)
 
         # QK normalization (if enabled)
         self.head_dim = head_dim
@@ -71,11 +64,10 @@ class ModalityUntiedAttention(torch.nn.Module):
             use_rope=use_rope,
         )
 
-    def _create_experts(self, input_dim, output_dim, init_args):
+    def _create_experts(self, input_dim, output_dim):
         """
         Helper to create modality-specific linear projections.
         """
-        init_fn = get_init_fn(init_args, input_dim, None)
         return torch.nn.ModuleList(
             [
                 torch.nn.Linear(
