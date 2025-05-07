@@ -354,10 +354,14 @@ By combining **ModalityUntiedFeedForward** and **ModalityUntiedAttention**, MoT 
 
 If you use this codebase, or otherwise find our work valuable, please cite:
 ```
-@article{mixture-of-transformers2024,
+@article{
+  liang2025mixtureoftransformers,
   title={Mixture-of-Transformers: A Sparse and Scalable Architecture for Multi-Modal Foundation Models},
-  author={Liang, Weixin and Yu, Lili and Luo, Liang and Iyer, Srinivasan and Dong, Ning and Zhou, Chunting and Ghosh, Gargi and Lewis, Mike and Yih, Wen-tau and Zettlemoyer, Luke and Lin, Xi Victoria},
-  journal={arXiv preprint arXiv:2411.04996},
-  year={2024}
+  author={Weixin Liang and LILI YU and Liang Luo and Srini Iyer and Ning Dong and Chunting Zhou and Gargi Ghosh and Mike Lewis and Wen-tau Yih and Luke Zettlemoyer and Xi Victoria Lin},
+  journal={Transactions on Machine Learning Research},
+  issn={2835-8856},
+  year={2025},
+  url={https://openreview.net/forum?id=Nu6N69i8SB},
+  note={}
 }
 ```
