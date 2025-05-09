@@ -3,7 +3,7 @@
 [![Arxiv](https://img.shields.io/badge/arXiv-2411.04996-B21A1B)](https://arxiv.org/abs/2411.04996)
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://x.com/liang_weixin/status/1854982365317415222)
 
-💬 This playbook presents a step-by-step tutorial on how to implement the **Mixture-of-Transformer (MoT)** architecture on top of your own transformer model to enable native multimodal generation. It also contains a basic implementation of MoT.
+💬 This playbook presents a step-by-step tutorial on how to implement the **Mixture-of-Transformer (MoT)** architecture on top of your own transformer model to enable native multimodal generation. It also contains a basic implementation.
 > **Mixture-of-Transformers: A Sparse and Scalable Architecture for Multi-Modal Foundation Models**. TMLR (March 2025).\
 > Weixin Liang, Lili Yu, Liang Luo, Srinivasan Iyer, Ning Dong, Chunting Zhou, Gargi Ghosh, Mike Lewis, Wen-tau Yih, Luke Zettlemoyer, Xi Victoria Lin\
 > Paper: https://arxiv.org/abs/2411.04996
@@ -290,15 +290,15 @@ class ModalityUntiedAttention(torch.nn.Module):
 💬 To summarize the code flow:
 
 1. **Initialization**:
-   - Modality-specific projections (`wq`, `wk`, `wv`, `wo`) and norm layers are created for each modality.
+   - Create modality-specific projections (`wq`, `wk`, `wv`, `wo`) and norm layers for each modality.
 2. **QKV Projection and Normalization**:
-   - Tokens are routed to modality-specific `wq`, `wk`, `wv` and QK-norm experts using `modality_masks`.
-   - The modality-specific queries, keys, and values are restored into their original sequence order.
+   - Route tokens to modality-specific `wq`, `wk`, `wv` and QK-norm experts using `modality_masks`.
+   - Re-pack the resulting queries, keys, and values into their original sequence order.
 3. **Attention Computation**:
-   - Global self-attention is computed.
+   - Compute global self-attention.
 4. **Output Projection and Normalization**:
-   - The self-attention outputs pass through modality-specific `wo` and norm layers
-   - The modality-specific attention output vectors are restored into their original sequence order as the final module output.
+   - Pass self-attention outputs through modality-specific `wo` and output norms.
+   - Re-pack the resulting outputs into their original sequence order to form the final module output.
 
 Please refer to [`src/simple_ModalityUntiedAttention.py`](src/simple_ModalityUntiedAttention.py) for the complete implementation.
 
