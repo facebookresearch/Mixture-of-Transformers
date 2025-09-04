@@ -56,15 +56,6 @@ class SimpleModalityUntiedFeedForward(torch.nn.Module):
             expert_output = self.local_experts_ffn_norm[i](expert_output)
             expert_outputs.append(expert_output)
 
-        merged_output = torch.empty(
-            (x.size(0), expert_outputs[0].size(1)),
-            device=x.device,
-            dtype=x.dtype,
-        )
-        for i in range(self.n_modalities - 1, -1, -1):
-            expert_output = expert_outputs[i]
-            merged_output[modality_masks[i]] = expert_output
-
         merged_output = merge_modalities(expert_outputs, modality_masks)
 
         return merged_output
