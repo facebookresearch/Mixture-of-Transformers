@@ -148,7 +148,7 @@ class SimpleModalityUntiedAttention(torch.nn.Module):
             expert_output = self.local_experts_wo[i](expert_input)
             expert_output = self.local_experts_attention_norm[i](expert_output)
             expert_outputs.append(expert_output)
-        return self.merge_modalities(expert_outputs, modality_masks)
+        return merge_modalities(expert_outputs, modality_masks)
 
 
 def qk_normalize_tensor(tensor, normalization_layer, head_dim):
